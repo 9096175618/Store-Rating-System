@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./UserDashboard.css";
 
 function UserDashboard() {
     const [stores, setStores] = useState([]);
@@ -14,9 +15,7 @@ function UserDashboard() {
         fetchStores();
     }, []);
 
-    // ==========================================
     // GET STORES
-    // ==========================================
     const fetchStores = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -48,10 +47,7 @@ function UserDashboard() {
         }
     };
 
-
-    // ==========================================
     // SEARCH STORE
-    // ==========================================
     const handleSearch = (e) => {
         const value = e.target.value;
 
@@ -72,10 +68,7 @@ function UserDashboard() {
         setFilteredStores(filtered);
     };
 
-
-    // ==========================================
     // ADD / UPDATE RATING
-    // ==========================================
     const handleRating = async (storeId, rating) => {
         try {
             const token = localStorage.getItem("token");
@@ -119,10 +112,7 @@ function UserDashboard() {
         }
     };
 
-
-    // ==========================================
     // CHANGE PASSWORD
-    // ==========================================
     const handlePasswordUpdate = async (e) => {
         e.preventDefault();
 
@@ -151,7 +141,6 @@ function UserDashboard() {
             const data = await response.json();
 
             if (response.ok) {
-
                 setPasswordMessage(
                     data.message ||
                     "Password updated successfully!"
@@ -161,7 +150,6 @@ function UserDashboard() {
                 setNewPassword("");
 
             } else {
-
                 setPasswordMessage(
                     data.message ||
                     "Password update failed"
@@ -169,7 +157,6 @@ function UserDashboard() {
             }
 
         } catch (error) {
-
             console.error(error);
 
             setPasswordMessage(
@@ -178,263 +165,254 @@ function UserDashboard() {
         }
     };
 
-
-    // ==========================================
     // LOGOUT
-    // ==========================================
     const handleLogout = () => {
-
         localStorage.removeItem("token");
         localStorage.removeItem("user");
 
         window.location.href = "/login";
     };
 
-
-    // ==========================================
     // LOADING
-    // ==========================================
     if (loading) {
         return (
-            <div style={{ padding: "30px" }}>
-                <h2>Loading stores...</h2>
+            <div className="dashboard-loading">
+                <div className="loading-spinner"></div>
+                <h2>Loading Dashboard...</h2>
+                <p>Please wait while we load the stores.</p>
             </div>
         );
     }
 
-
-    // ==========================================
     // DASHBOARD
-    // ==========================================
     return (
-        <div style={{ padding: "30px" }}>
+        <div className="user-dashboard">
 
-            {/* =====================================
-                HEADER
-            ====================================== */}
+            {/* ================= HEADER ================= */}
 
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                }}
-            >
+            <header className="dashboard-header">
 
-                <h1>User Dashboard</h1>
+                <div className="brand-section">
+                    <div className="brand-icon">
+                        ★
+                    </div>
+
+                    <div>
+                        <h1>Store Rating System</h1>
+                        <p>User Dashboard</p>
+                    </div>
+                </div>
 
                 <button
+                    className="logout-btn"
                     onClick={handleLogout}
-                    style={{
-                        padding: "10px 20px",
-                        cursor: "pointer"
-                    }}
                 >
                     Logout
                 </button>
 
-            </div>
+            </header>
 
 
-            {/* =====================================
-                CHANGE PASSWORD
-            ====================================== */}
+            {/* ================= WELCOME ================= */}
 
-            <div
-                style={{
-                    border: "1px solid #ccc",
-                    padding: "20px",
-                    marginTop: "20px",
-                    marginBottom: "30px",
-                    width: "400px",
-                    borderRadius: "8px"
-                }}
-            >
+            <section className="welcome-section">
 
-                <h2>Change Password</h2>
+                <div>
+                    <h2>Welcome Back! 👋</h2>
 
-                <form
-                    onSubmit={handlePasswordUpdate}
-                >
-
-                    <input
-                        type="password"
-                        placeholder="Current Password"
-                        value={currentPassword}
-                        onChange={(e) =>
-                            setCurrentPassword(
-                                e.target.value
-                            )
-                        }
-                        required
-                        style={{
-                            display: "block",
-                            width: "100%",
-                            padding: "10px",
-                            marginBottom: "10px",
-                            boxSizing: "border-box"
-                        }}
-                    />
-
-                    <input
-                        type="password"
-                        placeholder="New Password"
-                        value={newPassword}
-                        onChange={(e) =>
-                            setNewPassword(
-                                e.target.value
-                            )
-                        }
-                        required
-                        style={{
-                            display: "block",
-                            width: "100%",
-                            padding: "10px",
-                            marginBottom: "10px",
-                            boxSizing: "border-box"
-                        }}
-                    />
-
-                    <p style={{ fontSize: "14px" }}>
-                        Password must be 8-16 characters,
-                        contain at least one uppercase
-                        letter and one special character.
+                    <p>
+                        Discover stores, check ratings,
+                        and share your experience.
                     </p>
+                </div>
 
-                    <button
-                        type="submit"
-                        style={{
-                            padding: "10px 20px",
-                            cursor: "pointer"
-                        }}
-                    >
-                        Update Password
-                    </button>
-
-                </form>
-
-                {passwordMessage && (
-                    <p>{passwordMessage}</p>
-                )}
-
-            </div>
+            </section>
 
 
-            {/* =====================================
-                AVAILABLE STORES
-            ====================================== */}
+            {/* ================= STATS ================= */}
 
-            <h2>Available Stores</h2>
+            <section className="stats-grid">
 
+                <div className="stat-card">
 
-            {/* SEARCH */}
+                    <div className="stat-icon">
+                        🏪
+                    </div>
 
-            <input
-                type="text"
-                placeholder="Search by store name or address"
-                value={search}
-                onChange={handleSearch}
-                style={{
-                    width: "400px",
-                    padding: "10px",
-                    fontSize: "16px",
-                    marginBottom: "20px"
-                }}
-            />
+                    <div>
+                        <h3>{stores.length}</h3>
+                        <p>Total Stores</p>
+                    </div>
+
+                </div>
 
 
-            {/* =====================================
-                STORE TABLE
-            ====================================== */}
+                <div className="stat-card">
 
-            <table
-                border="1"
-                cellPadding="10"
-                style={{
-                    borderCollapse: "collapse",
-                    width: "100%"
-                }}
-            >
+                    <div className="stat-icon">
+                        ⭐
+                    </div>
 
-                <thead>
+                    <div>
+                        <h3>
+                            {stores.filter(
+                                store => store.user_rating
+                            ).length}
+                        </h3>
 
-                    <tr>
+                        <p>Stores Rated</p>
+                    </div>
 
-                        <th>ID</th>
-
-                        <th>Store Name</th>
-
-                        <th>Email</th>
-
-                        <th>Address</th>
-
-                        <th>Your Rating</th>
-
-                        <th>Average Rating</th>
-
-                        <th>Total Ratings</th>
-
-                        <th>Action</th>
-
-                    </tr>
-
-                </thead>
+                </div>
 
 
-                <tbody>
+                <div className="stat-card">
+
+                    <div className="stat-icon">
+                        🔍
+                    </div>
+
+                    <div>
+                        <h3>
+                            {filteredStores.length}
+                        </h3>
+
+                        <p>Search Results</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            {/* ================= STORES ================= */}
+
+            <section className="stores-section">
+
+                <div className="section-heading">
+
+                    <div>
+                        <h2>Available Stores</h2>
+
+                        <p>
+                            Search and rate your favorite stores
+                        </p>
+                    </div>
+
+                    <div className="search-box">
+
+                        <span>🔍</span>
+
+                        <input
+                            type="text"
+                            placeholder="Search stores..."
+                            value={search}
+                            onChange={handleSearch}
+                        />
+
+                    </div>
+
+                </div>
+
+
+                {/* STORE CARDS */}
+
+                <div className="store-grid">
 
                     {filteredStores.length > 0 ? (
 
                         filteredStores.map((store) => (
 
-                            <tr key={store.id}>
+                            <div
+                                className="store-card"
+                                key={store.id}
+                            >
 
-                                <td>
-                                    {store.id}
-                                </td>
+                                <div className="store-card-header">
 
-                                <td>
-                                    {store.name}
-                                </td>
+                                    <div className="store-icon">
+                                        🏪
+                                    </div>
 
-                                <td>
-                                    {store.email}
-                                </td>
+                                    <div>
+                                        <h3>
+                                            {store.name}
+                                        </h3>
 
-                                <td>
-                                    {store.address}
-                                </td>
+                                        <p>
+                                            {store.email}
+                                        </p>
+                                    </div>
 
-                                <td>
-
-                                    {store.user_rating
-                                        ? `${store.user_rating} / 5`
-                                        : "Not Rated"}
-
-                                </td>
+                                </div>
 
 
-                                <td>
+                                <div className="store-address">
 
-                                    ⭐{" "}
+                                    <span>📍</span>
 
-                                    {store.average_rating
-                                        ? Number(
-                                              store.average_rating
-                                          ).toFixed(1)
-                                        : "0.0"}
+                                    <p>
+                                        {store.address}
+                                    </p>
 
-                                    {" "} / 5
-
-                                </td>
+                                </div>
 
 
-                                <td>
-                                    {store.total_ratings || 0}
-                                </td>
+                                <div className="rating-info">
+
+                                    <div className="rating-box">
+
+                                        <span>
+                                            ⭐ Average Rating
+                                        </span>
+
+                                        <strong>
+                                            {store.average_rating
+                                                ? Number(
+                                                    store.average_rating
+                                                ).toFixed(1)
+                                                : "0.0"}
+                                            <small>/5</small>
+                                        </strong>
+
+                                    </div>
 
 
-                                <td>
+                                    <div className="rating-box">
+
+                                        <span>
+                                            👥 Ratings
+                                        </span>
+
+                                        <strong>
+                                            {store.total_ratings || 0}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div className="your-rating">
+
+                                    <span>
+                                        Your Rating:
+                                    </span>
+
+                                    <strong>
+                                        {store.user_rating
+                                            ? `⭐ ${store.user_rating}/5`
+                                            : "Not Rated"}
+                                    </strong>
+
+                                </div>
+
+
+                                <div className="rate-section">
+
+                                    <label>
+                                        Rate this store
+                                    </label>
 
                                     <select
                                         defaultValue=""
@@ -452,57 +430,171 @@ function UserDashboard() {
                                             value=""
                                             disabled
                                         >
-                                            Rate Store
+                                            Select Rating
                                         </option>
 
                                         <option value="1">
-                                            1 / 5
+                                            ⭐ 1 / 5
                                         </option>
 
                                         <option value="2">
-                                            2 / 5
+                                            ⭐⭐ 2 / 5
                                         </option>
 
                                         <option value="3">
-                                            3 / 5
+                                            ⭐⭐⭐ 3 / 5
                                         </option>
 
                                         <option value="4">
-                                            4 / 5
+                                            ⭐⭐⭐⭐ 4 / 5
                                         </option>
 
                                         <option value="5">
-                                            5 / 5
+                                            ⭐⭐⭐⭐⭐ 5 / 5
                                         </option>
 
                                     </select>
 
-                                </td>
+                                </div>
 
-                            </tr>
+                            </div>
 
                         ))
 
                     ) : (
 
-                        <tr>
+                        <div className="no-stores">
 
-                            <td
-                                colSpan="8"
-                                style={{
-                                    textAlign: "center"
-                                }}
-                            >
-                                No stores found
-                            </td>
+                            <div>
+                                🔍
+                            </div>
 
-                        </tr>
+                            <h3>
+                                No Stores Found
+                            </h3>
+
+                            <p>
+                                Try searching with a different
+                                store name or address.
+                            </p>
+
+                        </div>
 
                     )}
 
-                </tbody>
+                </div>
 
-            </table>
+            </section>
+
+
+            {/* ================= PASSWORD ================= */}
+
+            <section className="password-section">
+
+                <div className="password-header">
+
+                    <div className="password-icon">
+                        🔐
+                    </div>
+
+                    <div>
+                        <h2>Change Password</h2>
+
+                        <p>
+                            Keep your account secure by
+                            updating your password.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <form
+                    className="password-form"
+                    onSubmit={handlePasswordUpdate}
+                >
+
+                    <div className="password-field">
+
+                        <label>
+                            Current Password
+                        </label>
+
+                        <input
+                            type="password"
+                            placeholder="Enter current password"
+                            value={currentPassword}
+                            onChange={(e) =>
+                                setCurrentPassword(
+                                    e.target.value
+                                )
+                            }
+                            required
+                        />
+
+                    </div>
+
+
+                    <div className="password-field">
+
+                        <label>
+                            New Password
+                        </label>
+
+                        <input
+                            type="password"
+                            placeholder="Enter new password"
+                            value={newPassword}
+                            onChange={(e) =>
+                                setNewPassword(
+                                    e.target.value
+                                )
+                            }
+                            required
+                        />
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        className="password-btn"
+                    >
+                        Update Password
+                    </button>
+
+                </form>
+
+
+                <p className="password-hint">
+                    Password must be 8-16 characters and
+                    contain at least one uppercase letter
+                    and one special character.
+                </p>
+
+
+                {passwordMessage && (
+                    <div className="password-message">
+                        {passwordMessage}
+                    </div>
+                )}
+
+            </section>
+
+
+            {/* ================= FOOTER ================= */}
+
+            <footer className="dashboard-footer">
+
+                <p>
+                    © 2026 Store Rating System
+                </p>
+
+                <p>
+                    Rate • Discover • Share
+                </p>
+
+            </footer>
 
         </div>
     );

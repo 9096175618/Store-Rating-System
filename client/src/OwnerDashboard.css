@@ -1,0 +1,566 @@
+* {
+    box-sizing: border-box;
+}
+
+.owner-dashboard {
+    min-height: 100vh;
+    background: #f5f7fb;
+    color: #1f2937;
+    font-family: Arial, sans-serif;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.owner-header {
+    background: #ffffff;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.owner-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.owner-logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+}
+
+.owner-brand h1 {
+    margin: 0;
+    font-size: 21px;
+}
+
+.owner-brand p {
+    margin: 4px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.owner-logout {
+    background: #ef4444;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.owner-logout:hover {
+    background: #dc2626;
+}
+
+/* ==========================================
+   WELCOME
+========================================== */
+
+.owner-welcome {
+    margin: 30px 6% 20px;
+    padding: 30px;
+    border-radius: 16px;
+    background: #2563eb;
+    color: white;
+}
+
+.owner-welcome h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+.owner-welcome p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* ==========================================
+   STATISTICS
+========================================== */
+
+.owner-stats {
+    margin: 0 6% 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.owner-stat-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.owner-stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: #eff6ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 23px;
+}
+
+.owner-stat-card h3 {
+    margin: 0;
+    font-size: 25px;
+}
+
+.owner-stat-card p {
+    margin: 5px 0 0;
+    color: #6b7280;
+}
+
+/* ==========================================
+   SECTIONS
+========================================== */
+
+.owner-section {
+    margin: 0 6% 30px;
+    background: white;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.owner-section-header {
+    padding: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.owner-section-header h2 {
+    margin: 0;
+}
+
+.owner-section-header p {
+    margin: 5px 0 0;
+    color: #6b7280;
+}
+
+.rating-count-badge {
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   STORES
+========================================== */
+
+.owner-store-grid {
+    padding: 22px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.owner-store-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    transition: 0.2s;
+}
+
+.owner-store-card:hover {
+    transform: translateY(-3px);
+}
+
+.owner-store-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.owner-store-icon {
+    width: 48px;
+    height: 48px;
+    background: #eff6ff;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+}
+
+.owner-store-top h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.owner-store-top span {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.owner-store-info {
+    margin-top: 20px;
+}
+
+.owner-store-info div {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.owner-store-info p {
+    margin: 0;
+    color: #4b5563;
+    font-size: 14px;
+}
+
+/* ==========================================
+   RATING OVERVIEW
+========================================== */
+
+.rating-overview {
+    margin: 0 6% 30px;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+}
+
+.rating-overview-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.rating-big-icon {
+    width: 50px;
+    height: 50px;
+    background: #fef3c7;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.rating-overview h2 {
+    margin: 0;
+}
+
+.rating-overview-header p {
+    margin: 5px 0 0;
+    color: #6b7280;
+}
+
+.rating-summary {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 50px;
+    margin-top: 30px;
+}
+
+.average-rating {
+    text-align: center;
+    border-right: 1px solid #e5e7eb;
+    padding: 15px;
+}
+
+.average-rating span {
+    display: block;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.average-rating strong {
+    display: block;
+    font-size: 35px;
+    margin: 10px 0;
+}
+
+.average-rating small {
+    color: #6b7280;
+}
+
+/* RATING BARS */
+
+.rating-bars {
+    padding: 10px 20px;
+}
+
+.rating-bar-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 40px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.rating-bar {
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.rating-fill {
+    height: 100%;
+    background: #2563eb;
+    border-radius: 10px;
+}
+
+/* ==========================================
+   RATINGS TABLE
+========================================== */
+
+.ratings-table-wrapper {
+    overflow-x: auto;
+}
+
+.ratings-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ratings-table th {
+    background: #f9fafb;
+    padding: 15px;
+    text-align: left;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.ratings-table td {
+    padding: 15px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 14px;
+}
+
+.ratings-table tr:hover {
+    background: #f9fafb;
+}
+
+.rating-pill {
+    display: inline-block;
+    background: #fef3c7;
+    padding: 6px 10px;
+    border-radius: 15px;
+    font-size: 13px;
+}
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.empty-state div {
+    font-size: 40px;
+}
+
+.empty-state h3 {
+    margin: 10px 0 5px;
+}
+
+.empty-state p {
+    color: #6b7280;
+}
+
+/* ==========================================
+   PASSWORD
+========================================== */
+
+.owner-password {
+    margin: 0 6% 30px;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+}
+
+.password-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.password-icon {
+    width: 48px;
+    height: 48px;
+    background: #eff6ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+}
+
+.password-title h2 {
+    margin: 0;
+}
+
+.password-title p {
+    margin: 5px 0 0;
+    color: #6b7280;
+}
+
+.owner-password-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.owner-password-form label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.owner-password-form input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+}
+
+.update-password-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.update-password-btn:hover {
+    background: #1d4ed8;
+}
+
+.password-note {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 15px;
+}
+
+.password-message {
+    margin-top: 12px;
+    padding: 10px;
+    background: #ecfdf5;
+    color: #047857;
+    border-radius: 7px;
+}
+
+/* ==========================================
+   ERROR
+========================================== */
+
+.owner-error {
+    margin: 0 6% 30px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.owner-footer {
+    padding: 25px 6%;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1100px) {
+
+    .owner-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .owner-store-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 750px) {
+
+    .owner-header {
+        padding: 15px 20px;
+    }
+
+    .owner-welcome,
+    .owner-section,
+    .rating-overview,
+    .owner-password,
+    .owner-error {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .owner-stats {
+        margin-left: 20px;
+        margin-right: 20px;
+        grid-template-columns: 1fr;
+    }
+
+    .owner-store-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rating-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .average-rating {
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .owner-password-form {
+        grid-template-columns: 1fr;
+    }
+
+    .owner-footer {
+        padding: 20px;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+}

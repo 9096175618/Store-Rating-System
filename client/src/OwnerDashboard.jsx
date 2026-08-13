@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./OwnerDashboard.css";
 
 function OwnerDashboard() {
     const [stores, setStores] = useState([]);
@@ -41,7 +42,6 @@ function OwnerDashboard() {
         }
     };
 
-
     // ==========================================
     // GET OWNER'S RATINGS
     // ==========================================
@@ -68,7 +68,6 @@ function OwnerDashboard() {
         }
     };
 
-
     // ==========================================
     // CALCULATE AVERAGE RATING
     // ==========================================
@@ -83,6 +82,20 @@ function OwnerDashboard() {
               ).toFixed(1)
             : "0.0";
 
+    // ==========================================
+    // RATING COUNTS
+    // ==========================================
+    const fiveStar = ratings.filter(
+        (item) => Number(item.rating) === 5
+    ).length;
+
+    const fourStar = ratings.filter(
+        (item) => Number(item.rating) === 4
+    ).length;
+
+    const threeStar = ratings.filter(
+        (item) => Number(item.rating) === 3
+    ).length;
 
     // ==========================================
     // UPDATE PASSWORD
@@ -123,300 +136,609 @@ function OwnerDashboard() {
         }
     };
 
-
     // ==========================================
     // LOGOUT
     // ==========================================
     const handleLogout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
 
         window.location.href = "/login";
     };
 
-
     return (
-        <div style={{ padding: "30px" }}>
+        <div className="owner-dashboard">
 
             {/* ==================================
                 HEADER
             ================================== */}
 
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                }}
-            >
+            <header className="owner-header">
 
-                <h1>Owner Dashboard</h1>
+                <div className="owner-brand">
 
-                <button onClick={handleLogout}>
+                    <div className="owner-logo">
+                        ★
+                    </div>
+
+                    <div>
+                        <h1>Store Rating System</h1>
+                        <p>Store Owner Dashboard</p>
+                    </div>
+
+                </div>
+
+                <button
+                    className="owner-logout"
+                    onClick={handleLogout}
+                >
                     Logout
                 </button>
 
-            </div>
+            </header>
+
+
+            {/* ==================================
+                WELCOME
+            ================================== */}
+
+            <section className="owner-welcome">
+
+                <div>
+
+                    <h2>
+                        Welcome, Store Owner! 👋
+                    </h2>
+
+                    <p>
+                        Monitor your stores, view customer
+                        ratings, and manage your account.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            {/* ==================================
+                STATISTICS
+            ================================== */}
+
+            <section className="owner-stats">
+
+                <div className="owner-stat-card">
+
+                    <div className="owner-stat-icon">
+                        🏪
+                    </div>
+
+                    <div>
+                        <h3>
+                            {stores.length}
+                        </h3>
+
+                        <p>
+                            My Stores
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div className="owner-stat-card">
+
+                    <div className="owner-stat-icon">
+                        ⭐
+                    </div>
+
+                    <div>
+                        <h3>
+                            {averageRating}
+                        </h3>
+
+                        <p>
+                            Average Rating
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div className="owner-stat-card">
+
+                    <div className="owner-stat-icon">
+                        👥
+                    </div>
+
+                    <div>
+                        <h3>
+                            {ratings.length}
+                        </h3>
+
+                        <p>
+                            Total Ratings
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div className="owner-stat-card">
+
+                    <div className="owner-stat-icon">
+                        🏆
+                    </div>
+
+                    <div>
+                        <h3>
+                            {fiveStar}
+                        </h3>
+
+                        <p>
+                            5-Star Ratings
+                        </p>
+                    </div>
+
+                </div>
+
+            </section>
 
 
             {/* ==================================
                 MY STORES
             ================================== */}
 
-            <h2>My Stores</h2>
+            <section className="owner-section">
 
-            {stores.length > 0 ? (
+                <div className="owner-section-header">
 
-                <table
-                    border="1"
-                    cellPadding="10"
-                    style={{
-                        borderCollapse: "collapse",
-                        width: "100%"
-                    }}
-                >
+                    <div>
 
-                    <thead>
+                        <h2>
+                            My Stores
+                        </h2>
 
-                        <tr>
-                            <th>ID</th>
-                            <th>Store Name</th>
-                            <th>Email</th>
-                            <th>Address</th>
-                        </tr>
+                        <p>
+                            Stores assigned to your account
+                        </p>
 
-                    </thead>
+                    </div>
 
-                    <tbody>
+                </div>
+
+
+                {stores.length > 0 ? (
+
+                    <div className="owner-store-grid">
 
                         {stores.map((store) => (
 
-                            <tr key={store.id}>
+                            <div
+                                className="owner-store-card"
+                                key={store.id}
+                            >
 
-                                <td>{store.id}</td>
+                                <div className="owner-store-top">
 
-                                <td>
-                                    {store.name}
-                                </td>
+                                    <div className="owner-store-icon">
+                                        🏪
+                                    </div>
 
-                                <td>
-                                    {store.email}
-                                </td>
+                                    <div>
 
-                                <td>
-                                    {store.address}
-                                </td>
+                                        <h3>
+                                            {store.name}
+                                        </h3>
 
-                            </tr>
+                                        <span>
+                                            Store ID: {store.id}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div className="owner-store-info">
+
+                                    <div>
+                                        <span>📧</span>
+                                        <p>
+                                            {store.email}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <span>📍</span>
+                                        <p>
+                                            {store.address}
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
 
                         ))}
 
-                    </tbody>
+                    </div>
 
-                </table>
+                ) : (
 
-            ) : (
+                    <div className="empty-state">
 
-                <p>No stores assigned to you.</p>
+                        <div>
+                            🏪
+                        </div>
 
-            )}
+                        <h3>
+                            No Stores Assigned
+                        </h3>
+
+                        <p>
+                            There are currently no stores
+                            assigned to your account.
+                        </p>
+
+                    </div>
+
+                )}
+
+            </section>
 
 
             {/* ==================================
-                RATING SUMMARY
+                RATING OVERVIEW
             ================================== */}
 
-            <div
-                style={{
-                    display: "flex",
-                    gap: "30px",
-                    marginTop: "30px",
-                    marginBottom: "30px"
-                }}
-            >
+            <section className="rating-overview">
 
-                <div
-                    style={{
-                        border: "1px solid #ccc",
-                        padding: "20px",
-                        minWidth: "200px"
-                    }}
-                >
+                <div className="rating-overview-header">
 
-                    <h3>Average Rating</h3>
+                    <div className="rating-big-icon">
+                        ⭐
+                    </div>
 
-                    <h2>
-                        ⭐ {averageRating} / 5
-                    </h2>
+                    <div>
+
+                        <h2>
+                            Rating Overview
+                        </h2>
+
+                        <p>
+                            See how customers rate your stores
+                        </p>
+
+                    </div>
 
                 </div>
 
 
-                <div
-                    style={{
-                        border: "1px solid #ccc",
-                        padding: "20px",
-                        minWidth: "200px"
-                    }}
-                >
+                <div className="rating-summary">
 
-                    <h3>Total Ratings</h3>
+                    <div className="average-rating">
 
-                    <h2>
-                        {ratings.length}
-                    </h2>
+                        <span>
+                            Average Rating
+                        </span>
+
+                        <strong>
+                            ⭐ {averageRating}
+                        </strong>
+
+                        <small>
+                            out of 5
+                        </small>
+
+                    </div>
+
+
+                    <div className="rating-bars">
+
+                        <div className="rating-bar-row">
+
+                            <span>
+                                5 ⭐
+                            </span>
+
+                            <div className="rating-bar">
+                                <div
+                                    className="rating-fill"
+                                    style={{
+                                        width:
+                                            ratings.length
+                                                ? `${(fiveStar / ratings.length) * 100}%`
+                                                : "0%"
+                                    }}
+                                ></div>
+                            </div>
+
+                            <strong>
+                                {fiveStar}
+                            </strong>
+
+                        </div>
+
+
+                        <div className="rating-bar-row">
+
+                            <span>
+                                4 ⭐
+                            </span>
+
+                            <div className="rating-bar">
+                                <div
+                                    className="rating-fill"
+                                    style={{
+                                        width:
+                                            ratings.length
+                                                ? `${(fourStar / ratings.length) * 100}%`
+                                                : "0%"
+                                    }}
+                                ></div>
+                            </div>
+
+                            <strong>
+                                {fourStar}
+                            </strong>
+
+                        </div>
+
+
+                        <div className="rating-bar-row">
+
+                            <span>
+                                3 ⭐
+                            </span>
+
+                            <div className="rating-bar">
+                                <div
+                                    className="rating-fill"
+                                    style={{
+                                        width:
+                                            ratings.length
+                                                ? `${(threeStar / ratings.length) * 100}%`
+                                                : "0%"
+                                    }}
+                                ></div>
+                            </div>
+
+                            <strong>
+                                {threeStar}
+                            </strong>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
-            </div>
+            </section>
 
 
             {/* ==================================
                 CUSTOMER RATINGS
             ================================== */}
 
-            <h2>Users Who Rated Your Store</h2>
+            <section className="owner-section">
 
-            {ratings.length > 0 ? (
+                <div className="owner-section-header">
 
-                <table
-                    border="1"
-                    cellPadding="10"
-                    style={{
-                        borderCollapse: "collapse",
-                        width: "100%"
-                    }}
-                >
+                    <div>
 
-                    <thead>
+                        <h2>
+                            Customer Ratings
+                        </h2>
 
-                        <tr>
-                            <th>Store</th>
-                            <th>User Name</th>
-                            <th>User Email</th>
-                            <th>Rating</th>
-                            <th>Date</th>
-                        </tr>
+                        <p>
+                            Users who rated your stores
+                        </p>
 
-                    </thead>
+                    </div>
 
-                    <tbody>
+                    <div className="rating-count-badge">
+                        {ratings.length} Ratings
+                    </div>
 
-                        {ratings.map((item, index) => (
+                </div>
 
-                            <tr
-                                key={
-                                    item.rating_id ||
-                                    index
-                                }
-                            >
 
-                                <td>
-                                    {item.store_name}
-                                </td>
+                {ratings.length > 0 ? (
 
-                                <td>
-                                    {item.user_name}
-                                </td>
+                    <div className="ratings-table-wrapper">
 
-                                <td>
-                                    {item.user_email}
-                                </td>
+                        <table className="ratings-table">
 
-                                <td>
-                                    ⭐ {item.rating} / 5
-                                </td>
+                            <thead>
 
-                                <td>
-                                    {item.created_at
-                                        ? new Date(
-                                              item.created_at
-                                          ).toLocaleString()
-                                        : "-"}
-                                </td>
+                                <tr>
+                                    <th>Store</th>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Rating</th>
+                                    <th>Date</th>
+                                </tr>
 
-                            </tr>
+                            </thead>
 
-                        ))}
+                            <tbody>
 
-                    </tbody>
+                                {ratings.map(
+                                    (item, index) => (
 
-                </table>
+                                        <tr
+                                            key={
+                                                item.rating_id ||
+                                                index
+                                            }
+                                        >
 
-            ) : (
+                                            <td>
+                                                <strong>
+                                                    {item.store_name}
+                                                </strong>
+                                            </td>
 
-                <p>
-                    No ratings received yet.
-                </p>
+                                            <td>
+                                                {item.user_name}
+                                            </td>
 
-            )}
+                                            <td>
+                                                {item.user_email}
+                                            </td>
+
+                                            <td>
+
+                                                <span className="rating-pill">
+                                                    ⭐ {item.rating} / 5
+                                                </span>
+
+                                            </td>
+
+                                            <td>
+                                                {item.created_at
+                                                    ? new Date(
+                                                        item.created_at
+                                                    ).toLocaleString()
+                                                    : "-"}
+                                            </td>
+
+                                        </tr>
+
+                                    )
+                                )}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                ) : (
+
+                    <div className="empty-state">
+
+                        <div>
+                            ⭐
+                        </div>
+
+                        <h3>
+                            No Ratings Yet
+                        </h3>
+
+                        <p>
+                            Your customers have not rated
+                            your stores yet.
+                        </p>
+
+                    </div>
+
+                )}
+
+            </section>
 
 
             {/* ==================================
                 CHANGE PASSWORD
             ================================== */}
 
-            <h2 style={{ marginTop: "40px" }}>
-                Change Password
-            </h2>
+            <section className="owner-password">
 
-            <form
-                onSubmit={handlePasswordUpdate}
-                style={{
-                    width: "400px",
-                    border: "1px solid #ccc",
-                    padding: "20px"
-                }}
-            >
+                <div className="password-title">
 
-                <input
-                    type="password"
-                    placeholder="Current Password"
-                    value={currentPassword}
-                    onChange={(e) =>
-                        setCurrentPassword(
-                            e.target.value
-                        )
-                    }
-                    required
-                    style={{
-                        width: "100%",
-                        padding: "10px",
-                        marginBottom: "10px"
-                    }}
-                />
+                    <div className="password-icon">
+                        🔐
+                    </div>
 
-                <input
-                    type="password"
-                    placeholder="New Password"
-                    value={newPassword}
-                    onChange={(e) =>
-                        setNewPassword(
-                            e.target.value
-                        )
-                    }
-                    required
-                    style={{
-                        width: "100%",
-                        padding: "10px",
-                        marginBottom: "10px"
-                    }}
-                />
+                    <div>
 
-                <p>
+                        <h2>
+                            Change Password
+                        </h2>
+
+                        <p>
+                            Update your password to keep
+                            your account secure.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    className="owner-password-form"
+                    onSubmit={handlePasswordUpdate}
+                >
+
+                    <div>
+
+                        <label>
+                            Current Password
+                        </label>
+
+                        <input
+                            type="password"
+                            placeholder="Enter current password"
+                            value={currentPassword}
+                            onChange={(e) =>
+                                setCurrentPassword(
+                                    e.target.value
+                                )
+                            }
+                            required
+                        />
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            New Password
+                        </label>
+
+                        <input
+                            type="password"
+                            placeholder="Enter new password"
+                            value={newPassword}
+                            onChange={(e) =>
+                                setNewPassword(
+                                    e.target.value
+                                )
+                            }
+                            required
+                        />
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        className="update-password-btn"
+                    >
+                        Update Password
+                    </button>
+
+                </form>
+
+
+                <p className="password-note">
                     Password must be 8-16 characters,
-                    contain at least one uppercase
-                    letter and one special character.
+                    contain at least one uppercase letter
+                    and one special character.
                 </p>
 
-                <button type="submit">
-                    Update Password
-                </button>
 
-            </form>
+                {passwordMessage && (
 
-            {passwordMessage && (
-                <p>{passwordMessage}</p>
-            )}
+                    <div className="password-message">
+                        {passwordMessage}
+                    </div>
+
+                )}
+
+            </section>
 
 
             {/* ==================================
@@ -424,8 +746,29 @@ function OwnerDashboard() {
             ================================== */}
 
             {message && (
-                <p>{message}</p>
+
+                <div className="owner-error">
+                    ⚠️ {message}
+                </div>
+
             )}
+
+
+            {/* ==================================
+                FOOTER
+            ================================== */}
+
+            <footer className="owner-footer">
+
+                <span>
+                    © 2026 Store Rating System
+                </span>
+
+                <span>
+                    Manage • Monitor • Improve
+                </span>
+
+            </footer>
 
         </div>
     );

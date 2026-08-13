@@ -5,43 +5,91 @@ import "./Auth.css";
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
+
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Temporary registration logic
-    console.log("Registration Data:", {
-      name,
-      email,
-      password,
-      role,
-    });
+    setMessage("");
+    setError("");
 
-    alert("Registration successful!");
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            address,
+            password,
+          }),
+        }
+      );
 
-    // Go to Login page
-    navigate("/login");
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Registration failed");
+        return;
+      }
+
+      setMessage(data.message);
+
+      // Clear form
+      setName("");
+      setEmail("");
+      setAddress("");
+      setPassword("");
+
+      // Go to login after successful registration
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+
+    } catch (error) {
+      console.error("Registration error:", error);
+
+      setError(
+        "Unable to connect to server. Please make sure the backend is running."
+      );
+    }
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
 
-        {/* Heading */}
         <h1>Create Account</h1>
 
         <p className="auth-subtitle">
           Register for Store Rating System
         </p>
 
-        {/* Registration Form */}
+        {message && (
+          <div className="success-message">
+            {message}
+          </div>
+        )}
+
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleRegister}>
 
-          {/* Full Name */}
+          {/* Name */}
           <div className="form-group">
             <label>Full Name</label>
 
@@ -50,8 +98,14 @@ function Register() {
               placeholder="Enter your full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              minLength="20"
+              maxLength="60"
               required
             />
+
+            <small>
+              Name must be between 20 and 60 characters.
+            </small>
           </div>
 
           {/* Email */}
@@ -67,6 +121,24 @@ function Register() {
             />
           </div>
 
+          {/* Address */}
+          <div className="form-group">
+            <label>Address</label>
+
+            <textarea
+              placeholder="Enter your address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              maxLength="400"
+              rows="4"
+              required
+            />
+
+            <small>
+              Maximum 400 characters.
+            </small>
+          </div>
+
           {/* Password */}
           <div className="form-group">
             <label>Password</label>
@@ -76,22 +148,15 @@ function Register() {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              minLength="8"
+              maxLength="16"
               required
             />
-          </div>
 
-          {/* Role */}
-          <div className="form-group">
-            <label>Role</label>
-
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="user">User</option>
-              <option value="owner">Store Owner</option>
-              <option value="admin">Admin</option>
-            </select>
+            <small>
+              8-16 characters, at least one uppercase letter
+              and one special character.
+            </small>
           </div>
 
           {/* Register Button */}
@@ -104,7 +169,6 @@ function Register() {
 
         </form>
 
-        {/* Login Link */}
         <p className="auth-footer">
           Already have an account?{" "}
           <Link to="/login">

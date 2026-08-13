@@ -1,0 +1,504 @@
+* {
+    box-sizing: border-box;
+}
+
+.user-dashboard {
+    min-height: 100vh;
+    background: #f5f7fb;
+    color: #1f2937;
+    font-family: Arial, sans-serif;
+}
+
+/* HEADER */
+
+.dashboard-header {
+    background: #ffffff;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.brand-section h1 {
+    margin: 0;
+    font-size: 21px;
+}
+
+.brand-section p {
+    margin: 4px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.logout-btn {
+    border: none;
+    background: #ef4444;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+}
+
+/* WELCOME */
+
+.welcome-section {
+    margin: 30px 6% 20px;
+    padding: 30px;
+    border-radius: 16px;
+    background: #2563eb;
+    color: white;
+}
+
+.welcome-section h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+.welcome-section p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* STATS */
+
+.stats-grid {
+    margin: 0 6% 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid #e5e7eb;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    background: #eff6ff;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+.stat-card h3 {
+    margin: 0;
+    font-size: 25px;
+}
+
+.stat-card p {
+    margin: 5px 0 0;
+    color: #6b7280;
+}
+
+/* STORES */
+
+.stores-section {
+    margin: 0 6% 30px;
+}
+
+.section-heading {
+    background: white;
+    padding: 22px;
+    border-radius: 14px 14px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.section-heading h2 {
+    margin: 0;
+}
+
+.section-heading p {
+    margin: 5px 0 0;
+    color: #6b7280;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    padding: 0 12px;
+    background: white;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    padding: 12px;
+    width: 260px;
+    font-size: 14px;
+}
+
+/* STORE GRID */
+
+.store-grid {
+    padding: 22px;
+    background: #eef2f7;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.store-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    transition: 0.2s;
+}
+
+.store-card:hover {
+    transform: translateY(-3px);
+}
+
+.store-card-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.store-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: #eff6ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.store-card h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.store-card-header p {
+    margin: 4px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.store-address {
+    display: flex;
+    gap: 8px;
+    margin: 18px 0;
+    color: #4b5563;
+}
+
+.store-address p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* RATING */
+
+.rating-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.rating-box {
+    background: #f9fafb;
+    padding: 12px;
+    border-radius: 9px;
+}
+
+.rating-box span {
+    display: block;
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.rating-box strong {
+    font-size: 20px;
+}
+
+.rating-box small {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.your-rating {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+    background: #fefce8;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.rate-section label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.rate-section select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    cursor: pointer;
+}
+
+/* NO STORES */
+
+.no-stores {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+}
+
+.no-stores div {
+    font-size: 40px;
+}
+
+.no-stores h3 {
+    margin-bottom: 5px;
+}
+
+.no-stores p {
+    color: #6b7280;
+}
+
+/* PASSWORD */
+
+.password-section {
+    margin: 0 6% 30px;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+}
+
+.password-header {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.password-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: #eff6ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+}
+
+.password-header h2 {
+    margin: 0;
+}
+
+.password-header p {
+    margin: 5px 0 0;
+    color: #6b7280;
+}
+
+.password-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.password-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.password-field input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+}
+
+.password-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.password-btn:hover {
+    background: #1d4ed8;
+}
+
+.password-hint {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 15px;
+}
+
+.password-message {
+    margin-top: 12px;
+    padding: 10px;
+    background: #ecfdf5;
+    color: #047857;
+    border-radius: 7px;
+}
+
+/* LOADING */
+
+.dashboard-loading {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #f5f7fb;
+}
+
+.dashboard-loading h2 {
+    margin-bottom: 5px;
+}
+
+.dashboard-loading p {
+    color: #6b7280;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #dbeafe;
+    border-top: 4px solid #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* FOOTER */
+
+.dashboard-footer {
+    padding: 25px 6%;
+    display: flex;
+    justify-content: space-between;
+    color: #6b7280;
+    font-size: 13px;
+    border-top: 1px solid #e5e7eb;
+    background: white;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+    .store-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .password-form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .dashboard-header {
+        padding: 15px 20px;
+    }
+
+    .welcome-section,
+    .stores-section,
+    .password-section {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .stats-grid {
+        margin-left: 20px;
+        margin-right: 20px;
+        grid-template-columns: 1fr;
+    }
+
+    .section-heading {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box input {
+        width: 100%;
+    }
+
+    .store-grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+
+    .password-form {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-footer {
+        margin-top: 20px;
+        padding: 20px;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+}
