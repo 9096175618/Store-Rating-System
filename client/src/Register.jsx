@@ -1,190 +1,120 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./Auth.css";
 
 function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [address, setAddress] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+  const handleRegister = (e) => {
+    e.preventDefault();
 
-        e.preventDefault();
+    // Temporary registration logic
+    console.log("Registration Data:", {
+      name,
+      email,
+      password,
+      role,
+    });
 
-        setMessage("");
+    alert("Registration successful!");
 
-        try {
+    // Go to Login page
+    navigate("/login");
+  };
 
-            const response = await axios.post(
-                "http://localhost:5000/api/auth/register",
-                {
-                    name: name,
-                    email: email,
-                    address: address,
-                    password: password
-                }
-            );
+  return (
+    <div className="auth-container">
+      <div className="auth-card">
 
-            setMessage(response.data.message);
+        {/* Heading */}
+        <h1>Create Account</h1>
 
-        } catch (error) {
+        <p className="auth-subtitle">
+          Register for Store Rating System
+        </p>
 
-            setMessage(
-                error.response?.data?.message ||
-                "Registration failed"
-            );
+        {/* Registration Form */}
+        <form onSubmit={handleRegister}>
 
-        }
-    };
+          {/* Full Name */}
+          <div className="form-group">
+            <label>Full Name</label>
 
+            <input
+              type="text"
+              placeholder="Enter your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-    return (
+          {/* Email */}
+          <div className="form-group">
+            <label>Email</label>
 
-        <div style={{ padding: "30px" }}>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-            <h1>Register</h1>
+          {/* Password */}
+          <div className="form-group">
+            <label>Password</label>
 
-            <form onSubmit={handleSubmit}>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-                {/* NAME */}
+          {/* Role */}
+          <div className="form-group">
+            <label>Role</label>
 
-                <div>
-
-                    <label>Name</label>
-
-                    <br />
-
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={(e) =>
-                            setName(e.target.value)
-                        }
-                        placeholder="Enter your full name"
-                        required
-                    />
-
-                    <p>
-                        Name must be 20-60 characters.
-                    </p>
-
-                </div>
-
-
-                {/* EMAIL */}
-
-                <div>
-
-                    <label>Email</label>
-
-                    <br />
-
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) =>
-                            setEmail(e.target.value)
-                        }
-                        placeholder="Enter email"
-                        required
-                    />
-
-                </div>
-
-
-                <br />
-
-
-                {/* ADDRESS */}
-
-                <div>
-
-                    <label>Address</label>
-
-                    <br />
-
-                    <textarea
-                        value={address}
-                        onChange={(e) =>
-                            setAddress(e.target.value)
-                        }
-                        placeholder="Enter address"
-                        maxLength="400"
-                        required
-                    />
-
-                    <p>
-                        Maximum 400 characters.
-                    </p>
-
-                </div>
-
-
-                {/* PASSWORD */}
-
-                <div>
-
-                    <label>Password</label>
-
-                    <br />
-
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) =>
-                            setPassword(e.target.value)
-                        }
-                        placeholder="Enter password"
-                        required
-                    />
-
-                    <p>
-                        Password must be 8-16 characters,
-                        contain at least one uppercase
-                        letter and one special character.
-                    </p>
-
-                </div>
-
-
-                <br />
-
-
-                <button type="submit">
-                    Register
-                </button>
-
-            </form>
-
-
-            <br />
-
-
-            <button
-                type="button"
-                onClick={() =>
-                    window.location.href = "/login"
-                }
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
             >
-                Back to Login
-            </button>
+              <option value="user">User</option>
+              <option value="owner">Store Owner</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
 
+          {/* Register Button */}
+          <button
+            type="submit"
+            className="auth-button"
+          >
+            Register
+          </button>
 
-            <br />
-            <br />
+        </form>
 
+        {/* Login Link */}
+        <p className="auth-footer">
+          Already have an account?{" "}
+          <Link to="/login">
+            Login
+          </Link>
+        </p>
 
-            {message && (
-                <p>
-                    {message}
-                </p>
-            )}
-
-        </div>
-
-    );
+      </div>
+    </div>
+  );
 }
 
 export default Register;

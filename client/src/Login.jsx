@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import "./Auth.css";
 
 function Login() {
 
@@ -70,10 +71,6 @@ function Login() {
     };
 
 
-    // ==========================================
-    // GO TO REGISTER PAGE
-    // ==========================================
-
     const goToRegister = () => {
 
         window.location.href = "/register";
@@ -83,102 +80,124 @@ function Login() {
 
     return (
 
-        <div style={{ padding: "30px" }}>
+        <div className="auth-page">
 
-            <h1>Login</h1>
+            <div className="login-card">
 
+                {/* Logo / Title */}
 
-            <form onSubmit={handleSubmit}>
+                <div className="auth-header">
 
-                {/* EMAIL */}
+                    <div className="auth-logo">
+                        ★
+                    </div>
 
-                <div>
+                    <h1>Store Rating System</h1>
 
-                    <label>
-                        Email
-                    </label>
-
-                    <br />
-
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) =>
-                            setEmail(e.target.value)
-                        }
-                        placeholder="Enter your email"
-                        required
-                    />
+                    <p>
+                        Welcome back! Please login to continue.
+                    </p>
 
                 </div>
 
 
-                <br />
+                {/* Login Form */}
+
+                <form
+                    onSubmit={handleSubmit}
+                    className="auth-form"
+                >
+
+                    {/* Email */}
+
+                    <div className="form-group">
+
+                        <label>
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) =>
+                                setEmail(e.target.value)
+                            }
+                            placeholder="Enter your email"
+                            required
+                        />
+
+                    </div>
 
 
-                {/* PASSWORD */}
+                    {/* Password */}
 
-                <div>
+                    <div className="form-group">
 
-                    <label>
-                        Password
-                    </label>
+                        <label>
+                            Password
+                        </label>
 
-                    <br />
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) =>
+                                setPassword(e.target.value)
+                            }
+                            placeholder="Enter your password"
+                            required
+                        />
 
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) =>
-                            setPassword(e.target.value)
-                        }
-                        placeholder="Enter your password"
-                        required
-                    />
+                    </div>
+
+
+                    {/* Login Button */}
+
+                    <button
+                        type="submit"
+                        className="auth-button"
+                    >
+                        Login
+                    </button>
+
+                </form>
+
+
+                {/* Register */}
+
+                <div className="auth-register">
+
+                    <p>
+                        Don't have an account?
+                    </p>
+
+                    <button
+                        type="button"
+                        onClick={goToRegister}
+                        className="register-button"
+                    >
+                        Create Account
+                    </button>
 
                 </div>
 
 
-                <br />
+                {/* Message */}
 
+                {message && (
 
-                {/* LOGIN */}
+                    <div
+                        className={
+                            message === "Login successful"
+                                ? "success-message"
+                                : "error-message"
+                        }
+                    >
+                        {message}
+                    </div>
 
-                <button type="submit">
-                    Login
-                </button>
+                )}
 
-            </form>
-
-
-            <br />
-
-
-            {/* REGISTER */}
-
-            <p>
-                Don't have an account?
-            </p>
-
-            <button
-                type="button"
-                onClick={goToRegister}
-            >
-                Register
-            </button>
-
-
-            <br />
-            <br />
-
-
-            {/* MESSAGE */}
-
-            {message && (
-                <p>
-                    {message}
-                </p>
-            )}
+            </div>
 
         </div>
 

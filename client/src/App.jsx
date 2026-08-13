@@ -6,6 +6,8 @@ import UserDashboard from "./UserDashboard";
 import OwnerDashboard from "./OwnerDashboard";
 import AdminDashboard from "./AdminDashboard";
 
+import "./App.css";
+
 function App() {
     return (
         <BrowserRouter>
