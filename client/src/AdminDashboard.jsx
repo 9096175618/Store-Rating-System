@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./App.css";
 
 function AdminDashboard() {
     const [users, setUsers] = useState([]);
@@ -11,6 +12,8 @@ function AdminDashboard() {
 
     const [showUserForm, setShowUserForm] = useState(false);
     const [showStoreForm, setShowStoreForm] = useState(false);
+
+    const [activeSection, setActiveSection] = useState("dashboard");
 
     const [newUser, setNewUser] = useState({
         name: "",
@@ -37,22 +40,26 @@ function AdminDashboard() {
         direction: "asc"
     });
 
-    // ==========================================
+    // ==============================
+    // TOKEN
+    // ==============================
+
+    const getToken = () => {
+        return localStorage.getItem("token");
+    };
+
+    // ==============================
     // LOAD DATA
-    // ==========================================
+    // ==============================
 
     useEffect(() => {
         getUsers();
         getStores();
     }, []);
 
-    const getToken = () => {
-        return localStorage.getItem("token");
-    };
-
-    // ==========================================
+    // ==============================
     // GET USERS
-    // ==========================================
+    // ==============================
 
     const getUsers = async () => {
         try {
@@ -74,9 +81,9 @@ function AdminDashboard() {
         }
     };
 
-    // ==========================================
+    // ==============================
     // GET STORES
-    // ==========================================
+    // ==============================
 
     const getStores = async () => {
         try {
@@ -98,86 +105,41 @@ function AdminDashboard() {
         }
     };
 
-    // ==========================================
+    // ==============================
     // VIEW USER DETAILS
-    // ==========================================
+    // ==============================
 
-    const viewDetails = async (user) => {
-        try {
-            const token = getToken();
+    const viewDetails = (user) => {
+        const ownerStore = stores.find(
+            (store) =>
+                Number(store.owner_id) === Number(user.id)
+        );
 
-            // Normal user/admin details
-            if (user.role !== "owner") {
-                alert(
-                    `Name: ${user.name}\n\n` +
-                    `Email: ${user.email}\n\n` +
-                    `Address: ${user.address}\n\n` +
-                    `Role: ${user.role}`
-                );
+        const ratingText = ownerStore
+            ? `${Number(
+                ownerStore.average_rating || 0
+            ).toFixed(1)} / 5`
+            : "No rating yet";
 
-                return;
-            }
-
-            // Find owner's stores
-            const response = await axios.get(
-                "http://localhost:5000/api/stores/owner/my-stores",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            // Since this endpoint returns stores
-            // belonging to logged-in admin? It may not
-            // return another owner's store.
-            // Therefore calculate rating from available stores.
-
-            const ownerStore = stores.find(
-                (store) =>
-                    Number(store.owner_id) === Number(user.id)
-            );
-
-            let ratingText = "No rating yet";
-
-            if (ownerStore) {
-                ratingText =
-                    `${Number(
-                        ownerStore.average_rating || 0
-                    ).toFixed(1)} / 5`;
-            }
-
-            alert(
-                `Name: ${user.name}\n\n` +
-                `Email: ${user.email}\n\n` +
-                `Address: ${user.address}\n\n` +
-                `Role: ${user.role}\n\n` +
-                `Store Rating: ${ratingText}`
-            );
-
-        } catch (error) {
-            alert(
-                `Name: ${user.name}\n\n` +
-                `Email: ${user.email}\n\n` +
-                `Address: ${user.address}\n\n` +
-                `Role: ${user.role}\n\n` +
-                `Store Rating: Unable to load`
-            );
-        }
+        alert(
+            `Name: ${user.name}\n\n` +
+            `Email: ${user.email}\n\n` +
+            `Address: ${user.address}\n\n` +
+            `Role: ${user.role}\n\n` +
+            `Store Rating: ${ratingText}`
+        );
     };
 
-    // ==========================================
+    // ==============================
     // DELETE USER
-    // ==========================================
+    // ==============================
 
     const deleteUser = async (id) => {
         const confirmDelete = window.confirm(
             "Are you sure you want to delete this user?"
         );
 
-        if (!confirmDelete) {
-            return;
-        }
+        if (!confirmDelete) return;
 
         try {
             const response = await axios.delete(
@@ -202,20 +164,17 @@ function AdminDashboard() {
         }
     };
 
-    // ==========================================
+    // ==============================
     // CHANGE ROLE
-    // ==========================================
+    // ==============================
 
     const changeRole = async (id, currentRole) => {
-
         const newRole = window.prompt(
             "Enter new role: user, owner, or admin",
             currentRole
         );
 
-        if (!newRole) {
-            return;
-        }
+        if (!newRole) return;
 
         const role = newRole.toLowerCase().trim();
 
@@ -230,7 +189,7 @@ function AdminDashboard() {
             const response = await axios.put(
                 `http://localhost:5000/api/users/${id}/role`,
                 {
-                    role: role
+                    role
                 },
                 {
                     headers: {
@@ -240,7 +199,6 @@ function AdminDashboard() {
             );
 
             setMessage(response.data.message);
-
             getUsers();
 
         } catch (error) {
@@ -251,9 +209,9 @@ function AdminDashboard() {
         }
     };
 
-    // ==========================================
+    // ==============================
     // ADD USER
-    // ==========================================
+    // ==============================
 
     const addUser = async (e) => {
         e.preventDefault();
@@ -263,7 +221,6 @@ function AdminDashboard() {
         const password = newUser.password;
         const address = newUser.address.trim();
 
-        // Name validation
         if (name.length < 20 || name.length > 60) {
             alert(
                 "Name must be between 20 and 60 characters."
@@ -271,7 +228,6 @@ function AdminDashboard() {
             return;
         }
 
-        // Address validation
         if (address.length > 400) {
             alert(
                 "Address must not exceed 400 characters."
@@ -279,7 +235,6 @@ function AdminDashboard() {
             return;
         }
 
-        // Email validation
         const emailRegex =
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -290,7 +245,6 @@ function AdminDashboard() {
             return;
         }
 
-        // Password validation
         const passwordRegex =
             /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,16}$/;
 
@@ -327,7 +281,6 @@ function AdminDashboard() {
             });
 
             setShowUserForm(false);
-
             getUsers();
 
         } catch (error) {
@@ -338,9 +291,9 @@ function AdminDashboard() {
         }
     };
 
-    // ==========================================
+    // ==============================
     // ADD STORE
-    // ==========================================
+    // ==============================
 
     const addStore = async (e) => {
         e.preventDefault();
@@ -403,7 +356,6 @@ function AdminDashboard() {
             });
 
             setShowStoreForm(false);
-
             getStores();
 
         } catch (error) {
@@ -414,9 +366,9 @@ function AdminDashboard() {
         }
     };
 
-    // ==========================================
+    // ==============================
     // LOGOUT
-    // ==========================================
+    // ==============================
 
     const logout = () => {
         localStorage.removeItem("token");
@@ -425,9 +377,9 @@ function AdminDashboard() {
         window.location.href = "/login";
     };
 
-    // ==========================================
-    // USER SORT
-    // ==========================================
+    // ==============================
+    // SORT
+    // ==============================
 
     const handleUserSort = (field) => {
         setSortUser((previous) => ({
@@ -440,10 +392,6 @@ function AdminDashboard() {
         }));
     };
 
-    // ==========================================
-    // STORE SORT
-    // ==========================================
-
     const handleStoreSort = (field) => {
         setSortStore((previous) => ({
             field,
@@ -455,47 +403,39 @@ function AdminDashboard() {
         }));
     };
 
-    // ==========================================
+    // ==============================
     // FILTER USERS
-    // ==========================================
+    // ==============================
 
     const filteredUsers = users
         .filter((user) => {
-
-            const value =
-                searchUser.toLowerCase();
+            const value = searchUser.toLowerCase();
 
             return (
-                user.name
+                String(user.name || "")
                     .toLowerCase()
                     .includes(value) ||
-
-                user.email
+                String(user.email || "")
                     .toLowerCase()
                     .includes(value) ||
-
-                user.address
+                String(user.address || "")
                     .toLowerCase()
                     .includes(value) ||
-
-                user.role
+                String(user.role || "")
                     .toLowerCase()
                     .includes(value)
             );
         })
         .sort((a, b) => {
-
             const field = sortUser.field;
 
-            const first =
-                String(
-                    a[field] || ""
-                ).toLowerCase();
+            const first = String(
+                a[field] || ""
+            ).toLowerCase();
 
-            const second =
-                String(
-                    b[field] || ""
-                ).toLowerCase();
+            const second = String(
+                b[field] || ""
+            ).toLowerCase();
 
             if (first < second) {
                 return sortUser.direction === "asc"
@@ -512,43 +452,36 @@ function AdminDashboard() {
             return 0;
         });
 
-    // ==========================================
+    // ==============================
     // FILTER STORES
-    // ==========================================
+    // ==============================
 
     const filteredStores = stores
         .filter((store) => {
-
-            const value =
-                searchStore.toLowerCase();
+            const value = searchStore.toLowerCase();
 
             return (
-                store.name
+                String(store.name || "")
                     .toLowerCase()
                     .includes(value) ||
-
-                store.email
+                String(store.email || "")
                     .toLowerCase()
                     .includes(value) ||
-
-                store.address
+                String(store.address || "")
                     .toLowerCase()
                     .includes(value)
             );
         })
         .sort((a, b) => {
-
             const field = sortStore.field;
 
-            const first =
-                String(
-                    a[field] || ""
-                ).toLowerCase();
+            const first = String(
+                a[field] || ""
+            ).toLowerCase();
 
-            const second =
-                String(
-                    b[field] || ""
-                ).toLowerCase();
+            const second = String(
+                b[field] || ""
+            ).toLowerCase();
 
             if (first < second) {
                 return sortStore.direction === "asc"
@@ -565,12 +498,11 @@ function AdminDashboard() {
             return 0;
         });
 
-    // ==========================================
+    // ==============================
     // STATISTICS
-    // ==========================================
+    // ==============================
 
     const totalUsers = users.length;
-
     const totalStores = stores.length;
 
     const totalRatings = stores.reduce(
@@ -580,769 +512,966 @@ function AdminDashboard() {
         0
     );
 
-    // ==========================================
-    // RETURN
-    // ==========================================
+    const averageRating =
+        stores.length > 0
+            ? stores.reduce(
+                (sum, store) =>
+                    sum +
+                    Number(
+                        store.average_rating || 0
+                    ),
+                0
+            ) / stores.length
+            : 0;
+
+    // ==============================
+    // RENDER
+    // ==============================
 
     return (
-        <div
-            style={{
-                padding: "30px"
-            }}
-        >
+        <div className="admin-layout">
 
-            {/* HEADER */}
+            {/* SIDEBAR */}
 
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent:
-                        "space-between",
-                    alignItems: "center"
-                }}
-            >
+            <aside className="admin-sidebar">
 
-                <h1>
-                    Admin Dashboard
-                </h1>
+                <div className="brand">
+                    <div className="brand-icon">
+                        ★
+                    </div>
 
-                <button
-                    onClick={logout}
-                >
-                    Logout
-                </button>
-
-            </div>
-
-            {message && (
-                <p>
-                    {message}
-                </p>
-            )}
-
-            {/* ==================================
-                STATISTICS
-            ================================== */}
-
-            <div
-                style={{
-                    display: "flex",
-                    gap: "20px",
-                    marginTop: "20px",
-                    marginBottom: "30px"
-                }}
-            >
-
-                <div
-                    style={{
-                        border: "1px solid #ccc",
-                        padding: "20px",
-                        minWidth: "180px"
-                    }}
-                >
-                    <h3>
-                        Total Users
-                    </h3>
-
-                    <h2>
-                        {totalUsers}
-                    </h2>
+                    <div>
+                        <h2>StoreRate</h2>
+                        <span>Admin Panel</span>
+                    </div>
                 </div>
 
-                <div
-                    style={{
-                        border: "1px solid #ccc",
-                        padding: "20px",
-                        minWidth: "180px"
-                    }}
-                >
-                    <h3>
-                        Total Stores
-                    </h3>
+                <nav className="sidebar-nav">
 
-                    <h2>
-                        {totalStores}
-                    </h2>
-                </div>
-
-                <div
-                    style={{
-                        border: "1px solid #ccc",
-                        padding: "20px",
-                        minWidth: "180px"
-                    }}
-                >
-                    <h3>
-                        Total Ratings
-                    </h3>
-
-                    <h2>
-                        {totalRatings}
-                    </h2>
-                </div>
-
-            </div>
-
-            {/* ==================================
-                ADD USER
-            ================================== */}
-
-            <button
-                onClick={() =>
-                    setShowUserForm(
-                        !showUserForm
-                    )
-                }
-            >
-                {showUserForm
-                    ? "Close Add User"
-                    : "Add New User"}
-            </button>
-
-            {showUserForm && (
-
-                <form
-                    onSubmit={addUser}
-                    style={{
-                        border:
-                            "1px solid #ccc",
-                        padding: "20px",
-                        marginTop: "20px",
-                        width: "400px"
-                    }}
-                >
-
-                    <h2>
-                        Add User
-                    </h2>
-
-                    <label>
-                        Name
-                    </label>
-
-                    <br />
-
-                    <input
-                        value={newUser.name}
-                        placeholder="20-60 characters"
-                        onChange={(e) =>
-                            setNewUser({
-                                ...newUser,
-                                name:
-                                    e.target.value
-                            })
+                    <button
+                        className={
+                            activeSection === "dashboard"
+                                ? "nav-item active"
+                                : "nav-item"
                         }
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "8px"
-                        }}
-                    />
-
-                    <br />
-                    <br />
-
-                    <label>
-                        Email
-                    </label>
-
-                    <br />
-
-                    <input
-                        type="email"
-                        value={newUser.email}
-                        placeholder="Email"
-                        onChange={(e) =>
-                            setNewUser({
-                                ...newUser,
-                                email:
-                                    e.target.value
-                            })
-                        }
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "8px"
-                        }}
-                    />
-
-                    <br />
-                    <br />
-
-                    <label>
-                        Password
-                    </label>
-
-                    <br />
-
-                    <input
-                        type="password"
-                        value={newUser.password}
-                        placeholder="Example: TestUser@123"
-                        onChange={(e) =>
-                            setNewUser({
-                                ...newUser,
-                                password:
-                                    e.target.value
-                            })
-                        }
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "8px"
-                        }}
-                    />
-
-                    <p>
-                        8-16 characters,
-                        one uppercase and
-                        one special character.
-                    </p>
-
-                    <label>
-                        Address
-                    </label>
-
-                    <br />
-
-                    <input
-                        value={newUser.address}
-                        placeholder="Maximum 400 characters"
-                        onChange={(e) =>
-                            setNewUser({
-                                ...newUser,
-                                address:
-                                    e.target.value
-                            })
-                        }
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "8px"
-                        }}
-                    />
-
-                    <br />
-                    <br />
-
-                    <label>
-                        Role
-                    </label>
-
-                    <br />
-
-                    <select
-                        value={newUser.role}
-                        onChange={(e) =>
-                            setNewUser({
-                                ...newUser,
-                                role:
-                                    e.target.value
-                            })
+                        onClick={() =>
+                            setActiveSection("dashboard")
                         }
                     >
-                        <option value="user">
-                            Normal User
-                        </option>
-
-                        <option value="owner">
-                            Store Owner
-                        </option>
-
-                        <option value="admin">
-                            Admin
-                        </option>
-                    </select>
-
-                    <br />
-                    <br />
-
-                    <button type="submit">
-                        Add User
+                        <span>⌂</span>
+                        Dashboard
                     </button>
 
-                </form>
-            )}
-
-            {/* ==================================
-                ADD STORE
-            ================================== */}
-
-            <br />
-            <br />
-
-            <button
-                onClick={() =>
-                    setShowStoreForm(
-                        !showStoreForm
-                    )
-                }
-            >
-                {showStoreForm
-                    ? "Close Add Store"
-                    : "Add New Store"}
-            </button>
-
-            {showStoreForm && (
-
-                <form
-                    onSubmit={addStore}
-                    style={{
-                        border:
-                            "1px solid #ccc",
-                        padding: "20px",
-                        marginTop: "20px",
-                        width: "400px"
-                    }}
-                >
-
-                    <h2>
-                        Add Store
-                    </h2>
-
-                    <label>
-                        Store Name
-                    </label>
-
-                    <br />
-
-                    <input
-                        value={newStore.name}
-                        placeholder="Store Name"
-                        onChange={(e) =>
-                            setNewStore({
-                                ...newStore,
-                                name:
-                                    e.target.value
-                            })
+                    <button
+                        className={
+                            activeSection === "users"
+                                ? "nav-item active"
+                                : "nav-item"
                         }
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "8px"
+                        onClick={() => {
+                            setActiveSection("users");
+                            setTimeout(() => {
+                                document
+                                    .getElementById("users-section")
+                                    ?.scrollIntoView({
+                                        behavior: "smooth"
+                                    });
+                            }, 50);
                         }}
-                    />
+                    >
+                        <span>♙</span>
+                        Users
+                    </button>
 
-                    <br />
-                    <br />
-
-                    <label>
-                        Email
-                    </label>
-
-                    <br />
-
-                    <input
-                        type="email"
-                        value={newStore.email}
-                        placeholder="Store Email"
-                        onChange={(e) =>
-                            setNewStore({
-                                ...newStore,
-                                email:
-                                    e.target.value
-                            })
+                    <button
+                        className={
+                            activeSection === "stores"
+                                ? "nav-item active"
+                                : "nav-item"
                         }
-                        style={{
-                            width: "100%",
-                            padding: "8px"
+                        onClick={() => {
+                            setActiveSection("stores");
+                            setTimeout(() => {
+                                document
+                                    .getElementById("stores-section")
+                                    ?.scrollIntoView({
+                                        behavior: "smooth"
+                                    });
+                            }, 50);
                         }}
-                    />
+                    >
+                        <span>▣</span>
+                        Stores
+                    </button>
 
-                    <br />
-                    <br />
-
-                    <label>
-                        Address
-                    </label>
-
-                    <br />
-
-                    <input
-                        value={newStore.address}
-                        placeholder="Maximum 400 characters"
-                        onChange={(e) =>
-                            setNewStore({
-                                ...newStore,
-                                address:
-                                    e.target.value
-                            })
-                        }
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "8px"
+                    <button
+                        className="nav-item"
+                        onClick={() => {
+                            setActiveSection("ratings");
+                            setTimeout(() => {
+                                document
+                                    .getElementById("stores-section")
+                                    ?.scrollIntoView({
+                                        behavior: "smooth"
+                                    });
+                            }, 50);
                         }}
-                    />
+                    >
+                        <span>★</span>
+                        Ratings
+                    </button>
 
-                    <br />
-                    <br />
+                </nav>
 
-                    <label>
-                        Store Owner
-                    </label>
+                <div className="sidebar-bottom">
 
-                    <br />
+                    <div className="admin-profile">
+                        <div className="avatar">
+                            A
+                        </div>
 
-                    <select
-                        value={newStore.owner_id}
-                        onChange={(e) =>
-                            setNewStore({
-                                ...newStore,
-                                owner_id:
-                                    e.target.value
-                            })
-                        }
+                        <div>
+                            <strong>Administrator</strong>
+                            <small>System Admin</small>
+                        </div>
+                    </div>
+
+                    <button
+                        className="logout-sidebar"
+                        onClick={logout}
+                    >
+                        ⇥ Logout
+                    </button>
+
+                </div>
+
+            </aside>
+
+            {/* MAIN */}
+
+            <main className="admin-main">
+
+                {/* TOP BAR */}
+
+                <header className="topbar">
+
+                    <div>
+                        <p className="breadcrumb">
+                            Admin / Dashboard
+                        </p>
+
+                        <h1>
+                            Welcome back, Admin 👋
+                        </h1>
+
+                        <p className="subtitle">
+                            Manage your store rating platform
+                            from one place.
+                        </p>
+                    </div>
+
+                    <button
+                        className="top-logout"
+                        onClick={logout}
+                    >
+                        Logout
+                    </button>
+
+                </header>
+
+                {/* MESSAGE */}
+
+                {message && (
+                    <div className="success-message">
+                        <span>✓</span>
+                        {message}
+
+                        <button
+                            onClick={() =>
+                                setMessage("")
+                            }
+                        >
+                            ×
+                        </button>
+                    </div>
+                )}
+
+                {/* STATISTICS */}
+
+                <section className="stats-grid">
+
+                    <div className="stat-card blue">
+
+                        <div className="stat-icon">
+                            ♙
+                        </div>
+
+                        <div>
+                            <p>Total Users</p>
+                            <h2>{totalUsers}</h2>
+                            <span>
+                                Registered users
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div className="stat-card purple">
+
+                        <div className="stat-icon">
+                            ▣
+                        </div>
+
+                        <div>
+                            <p>Total Stores</p>
+                            <h2>{totalStores}</h2>
+                            <span>
+                                Stores registered
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div className="stat-card orange">
+
+                        <div className="stat-icon">
+                            ★
+                        </div>
+
+                        <div>
+                            <p>Total Ratings</p>
+                            <h2>{totalRatings}</h2>
+                            <span>
+                                Customer ratings
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div className="stat-card green">
+
+                        <div className="stat-icon">
+                            ✓
+                        </div>
+
+                        <div>
+                            <p>Average Rating</p>
+                            <h2>
+                                {averageRating.toFixed(1)}
+                            </h2>
+                            <span>
+                                Out of 5.0
+                            </span>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                {/* QUICK ACTIONS */}
+
+                <section className="quick-actions">
+
+                    <div>
+                        <h2>Quick Actions</h2>
+                        <p>
+                            Quickly manage users and stores.
+                        </p>
+                    </div>
+
+                    <div className="action-buttons">
+
+                        <button
+                            className="primary-btn"
+                            onClick={() =>
+                                setShowUserForm(
+                                    !showUserForm
+                                )
+                            }
+                        >
+                            + Add New User
+                        </button>
+
+                        <button
+                            className="secondary-btn"
+                            onClick={() =>
+                                setShowStoreForm(
+                                    !showStoreForm
+                                )
+                            }
+                        >
+                            + Add New Store
+                        </button>
+
+                    </div>
+
+                </section>
+
+                {/* ADD USER FORM */}
+
+                {showUserForm && (
+                    <form
+                        onSubmit={addUser}
+                        className="form-card"
                     >
 
-                        <option value="">
-                            Select Store Owner
-                        </option>
+                        <div className="form-title">
+                            <div>
+                                <h2>Add New User</h2>
+                                <p>
+                                    Create a new platform user.
+                                </p>
+                            </div>
 
-                        {users
-                            .filter(
-                                (user) =>
-                                    user.role ===
-                                    "owner"
-                            )
-                            .map((owner) => (
+                            <button
+                                type="button"
+                                className="close-btn"
+                                onClick={() =>
+                                    setShowUserForm(false)
+                                }
+                            >
+                                ×
+                            </button>
+                        </div>
 
-                                <option
-                                    key={owner.id}
-                                    value={owner.id}
+                        <div className="form-grid">
+
+                            <div className="form-group">
+                                <label>Name</label>
+
+                                <input
+                                    value={newUser.name}
+                                    placeholder="20-60 characters"
+                                    onChange={(e) =>
+                                        setNewUser({
+                                            ...newUser,
+                                            name:
+                                                e.target.value
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Email</label>
+
+                                <input
+                                    type="email"
+                                    value={newUser.email}
+                                    placeholder="user@example.com"
+                                    onChange={(e) =>
+                                        setNewUser({
+                                            ...newUser,
+                                            email:
+                                                e.target.value
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Password</label>
+
+                                <input
+                                    type="password"
+                                    value={newUser.password}
+                                    placeholder="Example: TestUser@123"
+                                    onChange={(e) =>
+                                        setNewUser({
+                                            ...newUser,
+                                            password:
+                                                e.target.value
+                                        })
+                                    }
+                                    required
+                                />
+
+                                <small>
+                                    8-16 characters, one uppercase
+                                    and one special character.
+                                </small>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Role</label>
+
+                                <select
+                                    value={newUser.role}
+                                    onChange={(e) =>
+                                        setNewUser({
+                                            ...newUser,
+                                            role:
+                                                e.target.value
+                                        })
+                                    }
                                 >
-                                    {owner.name}
-                                </option>
+                                    <option value="user">
+                                        Normal User
+                                    </option>
 
-                            ))}
+                                    <option value="owner">
+                                        Store Owner
+                                    </option>
 
-                    </select>
+                                    <option value="admin">
+                                        Admin
+                                    </option>
+                                </select>
+                            </div>
 
-                    <br />
-                    <br />
+                            <div className="form-group full">
+                                <label>Address</label>
 
-                    <button type="submit">
-                        Add Store
-                    </button>
+                                <textarea
+                                    value={newUser.address}
+                                    placeholder="Maximum 400 characters"
+                                    onChange={(e) =>
+                                        setNewUser({
+                                            ...newUser,
+                                            address:
+                                                e.target.value
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
 
-                </form>
-            )}
+                        </div>
 
-            {/* ==================================
-                ALL USERS
-            ================================== */}
-
-            <h2
-                style={{
-                    marginTop: "40px"
-                }}
-            >
-                All Users
-            </h2>
-
-            <input
-                placeholder="Search Name, Email, Address or Role"
-                value={searchUser}
-                onChange={(e) =>
-                    setSearchUser(
-                        e.target.value
-                    )
-                }
-                style={{
-                    width: "400px",
-                    padding: "10px"
-                }}
-            />
-
-            <br />
-            <br />
-
-            <table
-                border="1"
-                cellPadding="10"
-                style={{
-                    borderCollapse:
-                        "collapse",
-                    width: "100%"
-                }}
-            >
-
-                <thead>
-
-                    <tr>
-
-                        <th
-                            onClick={() =>
-                                handleUserSort(
-                                    "id"
-                                )
-                            }
+                        <button
+                            type="submit"
+                            className="submit-btn"
                         >
-                            ID ↕
-                        </th>
+                            Create User
+                        </button>
 
-                        <th
-                            onClick={() =>
-                                handleUserSort(
-                                    "name"
-                                )
-                            }
-                        >
-                            Name ↕
-                        </th>
+                    </form>
+                )}
 
-                        <th
-                            onClick={() =>
-                                handleUserSort(
-                                    "email"
-                                )
-                            }
-                        >
-                            Email ↕
-                        </th>
+                {/* ADD STORE FORM */}
 
-                        <th
-                            onClick={() =>
-                                handleUserSort(
-                                    "address"
-                                )
-                            }
-                        >
-                            Address ↕
-                        </th>
+                {showStoreForm && (
+                    <form
+                        onSubmit={addStore}
+                        className="form-card"
+                    >
 
-                        <th
-                            onClick={() =>
-                                handleUserSort(
-                                    "role"
-                                )
-                            }
-                        >
-                            Role ↕
-                        </th>
+                        <div className="form-title">
 
-                        <th>
-                            Action
-                        </th>
+                            <div>
+                                <h2>Add New Store</h2>
+                                <p>
+                                    Register a new store.
+                                </p>
+                            </div>
 
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {filteredUsers.map(
-                        (user) => (
-
-                            <tr
-                                key={
-                                    user.id
+                            <button
+                                type="button"
+                                className="close-btn"
+                                onClick={() =>
+                                    setShowStoreForm(false)
                                 }
                             >
+                                ×
+                            </button>
 
-                                <td>
-                                    {user.id}
-                                </td>
+                        </div>
 
-                                <td>
-                                    {user.name}
-                                </td>
+                        <div className="form-grid">
 
-                                <td>
-                                    {user.email}
-                                </td>
+                            <div className="form-group">
+                                <label>Store Name</label>
 
-                                <td>
-                                    {user.address}
-                                </td>
+                                <input
+                                    value={newStore.name}
+                                    placeholder="Enter store name"
+                                    onChange={(e) =>
+                                        setNewStore({
+                                            ...newStore,
+                                            name:
+                                                e.target.value
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
 
-                                <td>
-                                    {user.role}
-                                </td>
+                            <div className="form-group">
+                                <label>Email</label>
 
-                                <td>
+                                <input
+                                    type="email"
+                                    value={newStore.email}
+                                    placeholder="store@example.com"
+                                    onChange={(e) =>
+                                        setNewStore({
+                                            ...newStore,
+                                            email:
+                                                e.target.value
+                                        })
+                                    }
+                                />
+                            </div>
 
-                                    <button
+                            <div className="form-group">
+                                <label>Store Owner</label>
+
+                                <select
+                                    value={newStore.owner_id}
+                                    onChange={(e) =>
+                                        setNewStore({
+                                            ...newStore,
+                                            owner_id:
+                                                e.target.value
+                                        })
+                                    }
+                                >
+
+                                    <option value="">
+                                        Select Store Owner
+                                    </option>
+
+                                    {users
+                                        .filter(
+                                            (user) =>
+                                                user.role ===
+                                                "owner"
+                                        )
+                                        .map((owner) => (
+                                            <option
+                                                key={owner.id}
+                                                value={owner.id}
+                                            >
+                                                {owner.name}
+                                            </option>
+                                        ))}
+
+                                </select>
+                            </div>
+
+                            <div className="form-group full">
+                                <label>Address</label>
+
+                                <textarea
+                                    value={newStore.address}
+                                    placeholder="Maximum 400 characters"
+                                    onChange={(e) =>
+                                        setNewStore({
+                                            ...newStore,
+                                            address:
+                                                e.target.value
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="submit-btn"
+                        >
+                            Create Store
+                        </button>
+
+                    </form>
+                )}
+
+                {/* USERS */}
+
+                <section
+                    id="users-section"
+                    className="data-card"
+                >
+
+                    <div className="section-header">
+
+                        <div>
+                            <h2>All Users</h2>
+
+                            <p>
+                                Manage registered users
+                                and their roles.
+                            </p>
+                        </div>
+
+                        <span className="count-badge">
+                            {filteredUsers.length} Users
+                        </span>
+
+                    </div>
+
+                    <div className="search-box">
+
+                        <span>⌕</span>
+
+                        <input
+                            placeholder="Search name, email, address or role..."
+                            value={searchUser}
+                            onChange={(e) =>
+                                setSearchUser(
+                                    e.target.value
+                                )
+                            }
+                        />
+
+                    </div>
+
+                    <div className="table-wrapper">
+
+                        <table className="modern-table">
+
+                            <thead>
+                                <tr>
+
+                                    <th
                                         onClick={() =>
-                                            viewDetails(
-                                                user
-                                            )
+                                            handleUserSort("id")
                                         }
                                     >
-                                        View Details
-                                    </button>
+                                        ID ↕
+                                    </th>
 
-                                    {" "}
-
-                                    <button
+                                    <th
                                         onClick={() =>
-                                            deleteUser(
-                                                user.id
-                                            )
+                                            handleUserSort("name")
                                         }
                                     >
-                                        Delete
-                                    </button>
+                                        User ↕
+                                    </th>
 
-                                    {" "}
-
-                                    <button
+                                    <th
                                         onClick={() =>
-                                            changeRole(
-                                                user.id,
-                                                user.role
-                                            )
+                                            handleUserSort("email")
                                         }
                                     >
-                                        Change Role
-                                    </button>
+                                        Email ↕
+                                    </th>
 
-                                </td>
+                                    <th
+                                        onClick={() =>
+                                            handleUserSort("address")
+                                        }
+                                    >
+                                        Address ↕
+                                    </th>
 
-                            </tr>
+                                    <th
+                                        onClick={() =>
+                                            handleUserSort("role")
+                                        }
+                                    >
+                                        Role ↕
+                                    </th>
 
-                        )
-                    )}
+                                    <th>
+                                        Actions
+                                    </th>
 
-                </tbody>
+                                </tr>
+                            </thead>
 
-            </table>
+                            <tbody>
 
-            {/* ==================================
-                ALL STORES
-            ================================== */}
+                                {filteredUsers.length === 0 ? (
+                                    <tr>
+                                        <td
+                                            colSpan="6"
+                                            className="empty-state"
+                                        >
+                                            No users found.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filteredUsers.map(
+                                        (user) => (
+                                            <tr
+                                                key={user.id}
+                                            >
 
-            <h2
-                style={{
-                    marginTop: "40px"
-                }}
-            >
-                All Stores
-            </h2>
+                                                <td>
+                                                    <span className="id-badge">
+                                                        #{user.id}
+                                                    </span>
+                                                </td>
 
-            <input
-                placeholder="Search Store Name, Email or Address"
-                value={searchStore}
-                onChange={(e) =>
-                    setSearchStore(
-                        e.target.value
-                    )
-                }
-                style={{
-                    width: "400px",
-                    padding: "10px"
-                }}
-            />
+                                                <td>
+                                                    <div className="user-cell">
 
-            <br />
-            <br />
+                                                        <div className="table-avatar">
+                                                            {String(
+                                                                user.name ||
+                                                                "U"
+                                                            )
+                                                                .charAt(0)
+                                                                .toUpperCase()}
+                                                        </div>
 
-            <table
-                border="1"
-                cellPadding="10"
-                style={{
-                    borderCollapse:
-                        "collapse",
-                    width: "100%"
-                }}
-            >
+                                                        <strong>
+                                                            {user.name}
+                                                        </strong>
 
-                <thead>
+                                                    </div>
+                                                </td>
 
-                    <tr>
+                                                <td>
+                                                    {user.email}
+                                                </td>
 
-                        <th
-                            onClick={() =>
-                                handleStoreSort(
-                                    "id"
+                                                <td>
+                                                    {user.address}
+                                                </td>
+
+                                                <td>
+                                                    <span
+                                                        className={`role-badge ${user.role}`}
+                                                    >
+                                                        {user.role}
+                                                    </span>
+                                                </td>
+
+                                                <td>
+
+                                                    <div className="action-group">
+
+                                                        <button
+                                                            className="view-btn"
+                                                            onClick={() =>
+                                                                viewDetails(
+                                                                    user
+                                                                )
+                                                            }
+                                                        >
+                                                            View
+                                                        </button>
+
+                                                        <button
+                                                            className="delete-btn"
+                                                            onClick={() =>
+                                                                deleteUser(
+                                                                    user.id
+                                                                )
+                                                            }
+                                                        >
+                                                            Delete
+                                                        </button>
+
+                                                        <button
+                                                            className="role-btn"
+                                                            onClick={() =>
+                                                                changeRole(
+                                                                    user.id,
+                                                                    user.role
+                                                                )
+                                                            }
+                                                        >
+                                                            Role
+                                                        </button>
+
+                                                    </div>
+
+                                                </td>
+
+                                            </tr>
+                                        )
+                                    )
+                                )}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+                {/* STORES */}
+
+                <section
+                    id="stores-section"
+                    className="data-card"
+                >
+
+                    <div className="section-header">
+
+                        <div>
+                            <h2>All Stores</h2>
+
+                            <p>
+                                View and manage registered
+                                stores and ratings.
+                            </p>
+                        </div>
+
+                        <span className="count-badge">
+                            {filteredStores.length} Stores
+                        </span>
+
+                    </div>
+
+                    <div className="search-box">
+
+                        <span>⌕</span>
+
+                        <input
+                            placeholder="Search store name, email or address..."
+                            value={searchStore}
+                            onChange={(e) =>
+                                setSearchStore(
+                                    e.target.value
                                 )
                             }
-                        >
-                            ID ↕
-                        </th>
+                        />
 
-                        <th
-                            onClick={() =>
-                                handleStoreSort(
-                                    "name"
-                                )
-                            }
-                        >
-                            Store Name ↕
-                        </th>
+                    </div>
 
-                        <th
-                            onClick={() =>
-                                handleStoreSort(
-                                    "email"
-                                )
-                            }
-                        >
-                            Email ↕
-                        </th>
+                    <div className="table-wrapper">
 
-                        <th
-                            onClick={() =>
-                                handleStoreSort(
-                                    "address"
-                                )
-                            }
-                        >
-                            Address ↕
-                        </th>
+                        <table className="modern-table">
 
-                        <th>
-                            Rating
-                        </th>
+                            <thead>
 
-                    </tr>
+                                <tr>
 
-                </thead>
+                                    <th
+                                        onClick={() =>
+                                            handleStoreSort("id")
+                                        }
+                                    >
+                                        ID ↕
+                                    </th>
 
-                <tbody>
+                                    <th
+                                        onClick={() =>
+                                            handleStoreSort("name")
+                                        }
+                                    >
+                                        Store ↕
+                                    </th>
 
-                    {filteredStores.map(
-                        (store) => (
+                                    <th
+                                        onClick={() =>
+                                            handleStoreSort("email")
+                                        }
+                                    >
+                                        Email ↕
+                                    </th>
 
-                            <tr
-                                key={
-                                    store.id
-                                }
-                            >
+                                    <th
+                                        onClick={() =>
+                                            handleStoreSort("address")
+                                        }
+                                    >
+                                        Address ↕
+                                    </th>
 
-                                <td>
-                                    {store.id}
-                                </td>
+                                    <th>
+                                        Rating
+                                    </th>
 
-                                <td>
-                                    {store.name}
-                                </td>
+                                </tr>
 
-                                <td>
-                                    {store.email}
-                                </td>
+                            </thead>
 
-                                <td>
-                                    {store.address}
-                                </td>
+                            <tbody>
 
-                                <td>
-                                    ⭐{" "}
-                                    {Number(
-                                        store.average_rating ||
-                                        0
-                                    ).toFixed(1)}
-                                    {" "} / 5
-                                </td>
+                                {filteredStores.length === 0 ? (
+                                    <tr>
+                                        <td
+                                            colSpan="5"
+                                            className="empty-state"
+                                        >
+                                            No stores found.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filteredStores.map(
+                                        (store) => (
+                                            <tr
+                                                key={store.id}
+                                            >
 
-                            </tr>
+                                                <td>
+                                                    <span className="id-badge">
+                                                        #{store.id}
+                                                    </span>
+                                                </td>
 
-                        )
-                    )}
+                                                <td>
+                                                    <div className="store-cell">
 
-                </tbody>
+                                                        <div className="store-icon">
+                                                            ▣
+                                                        </div>
 
-            </table>
+                                                        <strong>
+                                                            {store.name}
+                                                        </strong>
+
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    {store.email ||
+                                                        "—"}
+                                                </td>
+
+                                                <td>
+                                                    {store.address}
+                                                </td>
+
+                                                <td>
+
+                                                    <div className="rating">
+
+                                                        <span>
+                                                            ★
+                                                        </span>
+
+                                                        <strong>
+                                                            {Number(
+                                                                store.average_rating ||
+                                                                0
+                                                            ).toFixed(1)}
+                                                        </strong>
+
+                                                        <small>
+                                                            / 5
+                                                        </small>
+
+                                                    </div>
+
+                                                </td>
+
+                                            </tr>
+                                        )
+                                    )
+                                )}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+                {/* FOOTER */}
+
+                <footer className="dashboard-footer">
+                    <span>
+                        © 2026 StoreRate
+                    </span>
+
+                    <span>
+                        Store Rating Management System
+                    </span>
+                </footer>
+
+            </main>
 
         </div>
     );
